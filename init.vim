@@ -177,7 +177,6 @@ nnoremap <leader>R :call CWDSearchAndReplace()<CR>
 vnoremap <leader>R :call CWDSearchAndReplaceVisual()<CR>
 
 nnoremap <leader>r :call FileSearchAndReplace()<CR>
-vnoremap <leader>r :call FileSearchAndReplaceVisual()<CR>
 
 nnoremap <leader>s :call SearchProject()<CR>
 vnoremap <leader>s :call SearchProjectVisual()<CR>
@@ -242,6 +241,7 @@ autocmd FileType * call LC_maps()
 """""""""""""""""""""""""""""""
 let g:LanguageClient_serverCommands = {
     \ 'rust': ['~/.cargo/bin/rustup', 'run', 'nightly', 'rls'],
+    \ 'ruby': ['tcp://localhost:7658'],
     \ }
 
 " enable ncm2 for all buffers
@@ -380,26 +380,6 @@ function! CmdLine(str)
     exe "menu Foo.Bar :" . a:str
     emenu Foo.Bar
     unmenu Foo
-endfunction
-
-" Search and replace the visual selection in the file
-" if the visual selection is made on a single line else
-" it promps the user for a selection and replace inside
-" the selection.
-function! FileSearchAndReplaceVisual() range
-  call inputsave()
-  let visual_select = VisualSelection()
-  let newlines = matchstr(visual_select, '\n')
-  if empty(newlines)
-    let l:pattern = Escape(visual_select)
-    let replacement = input("Replace \"" . l:pattern . "\" with: ")
-    execute ":%s/" . l:pattern . "/" . replacement . "/gc"
-  else
-    let wordToReplace = input("Replace: ")
-    let replacement = input("Replace \"" . wordToReplace. "\" with: ")
-    execute a:firstline . "," . a:lastline . 's/' . wordToReplace . '/' . replacement . '/gc'
-  endif
-	call inputrestore()
 endfunction
 
 " Returns the word under cursor.
