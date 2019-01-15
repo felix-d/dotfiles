@@ -6,11 +6,6 @@
 call plug#begin('~/.vim/plugged')
 
 " Utils
-" I don't think this is required anymore. Quarantine.
-" Plug 'MarcWeber/vim-addon-mw-utils'
-" Plug 'tomtom/tlib_vim'
-" Plug 'tpope/vim-dispatch'
-" Plug 'benmills/vimux'
 
 Plug 'dbakker/vim-projectroot'
 Plug 'sheerun/vim-polyglot' " Supports all languages!
@@ -38,6 +33,7 @@ Plug 'ncm2/ncm2'
 Plug 'roxma/nvim-yarp'
 Plug 'ncm2/ncm2-bufword'
 Plug 'ncm2/ncm2-path'
+Plug 'ncm2/ncm2-go'
 
 " Linter
 Plug 'w0rp/ale' " Awesome linter. Note however that there are some overlaps with LanguageClient.
@@ -61,6 +57,8 @@ Plug 'christoomey/vim-tmux-runner' " Send commands to tmux pane
 
 " Ruby
 Plug 'tpope/vim-endwise' " Adds end automatically
+
+" Go
 
 call plug#end()
 
@@ -226,11 +224,11 @@ nmap <leader>cp :let @+ = expand("%")<cr>
 " Only create LSP mapping if there is a language server for this filetype.
 function! LC_maps()
   if has_key(g:LanguageClient_serverCommands, &filetype)
-    vnoremap <buffer> <silent> F :call LanguageClient#textDocument_rangeFormatting()<cr>
-    nnoremap <buffer> <silent> F :call LanguageClient#textDocument_formatting()<cr>
-    nnoremap <buffer> <silent> K :call LanguageClient#textDocument_hover()<cr>
-    nnoremap <buffer> <silent> gd :call LanguageClient#textDocument_definition()<CR>
-    nnoremap <buffer> <silent> <F2> :call LanguageClient#textDocument_rename()<CR>
+    vnoremap <buffer> <silent> <leader>lf :call LanguageClient#textDocument_rangeFormatting()<cr>
+    nnoremap <buffer> <silent> <leader>lf :call LanguageClient#textDocument_formatting()<cr>
+    nnoremap <buffer> <silent> <leader>ld :call LanguageClient#textDocument_hover()<cr>
+    nnoremap <buffer> <silent> <leader>lg :call LanguageClient#textDocument_definition()<CR>
+    nnoremap <buffer> <silent> <leader>lr :call LanguageClient#textDocument_rename()<CR>
   endif
 endfunction
 autocmd FileType * call LC_maps()
@@ -242,6 +240,7 @@ autocmd FileType * call LC_maps()
 let g:LanguageClient_serverCommands = {
     \ 'rust': ['~/.cargo/bin/rustup', 'run', 'nightly', 'rls'],
     \ 'ruby': ['tcp://localhost:7658'],
+    \ 'go' : ['go-langserver', '-gocodecompletion'],
     \ }
 
 " enable ncm2 for all buffers
@@ -294,6 +293,7 @@ let test#strategy = "vtr"
 " Disable for file types for which we use LanguageClient instead.
 let g:ale_pattern_options = {
 \   '.*\.rs$': {'ale_enabled': 0},
+\   '.*\.go$': {'ale_enabled': 0},
 \}
 let g:ale_completion_delay = 1000
 au BufWinEnter *.rb :let b:ale_ruby_rubocop_executable  =  system('PATH=$(pwd)/bin:$PATH && which rubocop | tr -d "\n"')

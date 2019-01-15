@@ -11,7 +11,7 @@ export PATH=$PATH:$HOME/.local/bin
 
 # Chruby
 source /usr/local/share/chruby/chruby.sh
-chruby 2.3
+chruby 2.5
 
 # Lang
 export LANG=en_US.UTF-8
@@ -25,6 +25,7 @@ export LC_ALL=en_US.UTF-8
 
 # Go
 export GOPATH="$HOME"
+export PATH=$GOPATH/bin:$PATH
 
 # passwords and stuff
 source ~/.secrets
@@ -52,6 +53,11 @@ alias delete-old-branches="git branch --merged | grep -v '\*\|master\|develop' |
 
 git_recent_branches() {
     git branch --sort=committerdate | tail -n 10
+}
+
+search_rake() {
+    local task_name="$(rake -T -A | fzf | sed -E 's/(rake|#.*)//g;s/^ *//;s/ *$//')"
+    rake -D $task_name
 }
 
 git_checkout_recent_branch() {
@@ -87,7 +93,7 @@ git config --global alias.up 'pull --rebase --autostash'
 
 export EDITOR=nvim
 export VISUAL=nvim
-chruby 2.5
+# chruby 2.5
 export PATH=$HOME/.cargo/bin:$PATH
 export JAVA_HOME=`/usr/libexec/java_home -v 1.8`
 
