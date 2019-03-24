@@ -24,7 +24,7 @@ export LC_TIME=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
 
 # Go
-export GOPATH="$HOME"
+export GOPATH="$HOME/go"
 export PATH=$GOPATH/bin:$PATH
 
 # passwords and stuff
@@ -84,6 +84,23 @@ git_checkout_recent_branch() {
     } &> /dev/null
 }
 
+clone_repo() {
+    local repo_url=$1
+
+    local repo_domain="$(echo "$1" | awk -F/ '{print $3}')"
+    local git_user="$(echo "$1" | awk -F/ '{print $4}')"
+    local user_path="$HOME/src/$repo_domain/$git_user"
+
+    mkdir -p $user_path
+    cd $user_path
+    git clone $repo_url
+
+    local repo_name="$(echo "$1" | awk -F/ '{print $5}')"
+    local src_dir="$(echo $repo_name | sed -e "s/\.git//g")"
+
+    cd $src_dir
+}
+
 alias gcor=git_checkout_recent_branch
 
 # alias gcor="branch_name=$(git_recent_branches | fzf); git add . && git stash save $branch_name && git co $branch_name"
@@ -93,7 +110,7 @@ git config --global alias.up 'pull --rebase --autostash'
 
 export EDITOR=nvim
 export VISUAL=nvim
-# chruby 2.5
+chruby 2.6
 export PATH=$HOME/.cargo/bin:$PATH
 export JAVA_HOME=`/usr/libexec/java_home -v 1.8`
 
@@ -102,3 +119,7 @@ bindkey -e
 
 export DEFAULT_USER=$USER
 zstyle ':prezto:module:git:info:dirty' format "%%B%F{$secondary_color}]%f%%b %F{yellow}✗%f"
+
+# cloudplatform: add Shopify clusters to your local kubernetes config
+export KUBECONFIG=${KUBECONFIG:+$KUBECONFIG:}/Users/felixdescoteaux/.kube/config:/Users/felixdescoteaux/.kube/config.shopify.cloudplatform
+for file in /Users/felixdescoteaux/src/github.com/Shopify/cloudplatform/workflow-utils/*.bash; do source ${file}; done

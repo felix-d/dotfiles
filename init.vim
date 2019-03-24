@@ -23,6 +23,7 @@ Plug 'vim-scripts/DeleteTrailingWhitespace' " Delete trailing whitespace on save
 Plug 'AndrewRadev/splitjoin.vim' " Split and join code
 Plug 'janko-m/vim-test' " Test runner that works!
 Plug 'djoshea/vim-autoread' " Reload files that have changed automatically.
+Plug 'b4b4r07/vim-sqlfmt'
 
 " Autocomplete
 Plug 'autozimu/LanguageClient-neovim', {
@@ -33,8 +34,8 @@ Plug 'ncm2/ncm2'
 Plug 'roxma/nvim-yarp'
 Plug 'ncm2/ncm2-bufword'
 Plug 'ncm2/ncm2-path'
-Plug 'ncm2/ncm2-go'
-
+" Plug 'ncm2/ncm2-go'
+"
 " Linter
 Plug 'w0rp/ale' " Awesome linter. Note however that there are some overlaps with LanguageClient.
 
@@ -237,11 +238,13 @@ autocmd FileType * call LC_maps()
 """""""""""""""""""""""""""""""
 " => AUTOCOMPLETION
 """""""""""""""""""""""""""""""
+let g:LanguageClient_hasSnippetSupport = 0
 let g:LanguageClient_serverCommands = {
     \ 'rust': ['~/.cargo/bin/rustup', 'run', 'nightly', 'rls'],
     \ 'ruby': ['tcp://localhost:7658'],
-    \ 'go' : ['go-langserver', '-gocodecompletion'],
+    \ 'go': ['bingo', '--format-style', 'goimports', '--diagnostics-style', 'instant', '--disable-func-snippet'],
     \ }
+    " \ 'go' : ['go-langserver', '-gocodecompletion', '-format-tool', 'gofmt'],
 
 " enable ncm2 for all buffers
 autocmd BufEnter * call ncm2#enable_for_buffer()
@@ -288,6 +291,13 @@ let test#strategy = "vtr"
 
 
 """""""""""""""""""""""""""""""
+" => Go
+"""""""""""""""""""""""""""""""
+autocmd BufWritePre *.go call LanguageClient#textDocument_formatting()
+autocmd FileType go setlocal noet ci pi sw=4 sts=0 ts=4
+
+
+"""""""""""""""""""""""""""""""
 " => Ale
 """""""""""""""""""""""""""""""
 " Disable for file types for which we use LanguageClient instead.
@@ -295,12 +305,18 @@ let g:ale_pattern_options = {
 \   '.*\.rs$': {'ale_enabled': 0},
 \   '.*\.go$': {'ale_enabled': 0},
 \}
+
 let g:ale_completion_delay = 1000
 au BufWinEnter *.rb :let b:ale_ruby_rubocop_executable  =  system('PATH=$(pwd)/bin:$PATH && which rubocop | tr -d "\n"')
 let g:ale_fixers = {
 \   '*': ['remove_trailing_lines', 'trim_whitespace'],
 \   'typescript': ['eslint', 'prettier', 'tslint'],
 \}
+" Linter from go-langserver does not work
+" so we use Ale for linting instead.
+" let g:ale_linters = {
+" \   'go': ['gofmt', 'govet'],
+" \}
 let g:ale_fix_on_save = 1
 let g:ale_completion_enabled = 1
 
@@ -356,6 +372,12 @@ nnoremap <silent> <leader>gr :Gread<CR>
 nnoremap <silent> <leader>gw :Gwrite<CR>
 nnoremap <silent> <leader>ge :Gedit<CR>
 nnoremap <silent> <leader>gi :Git add -p %<CR>
+" Auto clean fugitive buffers
+autocmd BufReadPost fugitive://* set bufhidden=delete
+" Navigate to the current git object
+autocmd FileType git nnoremap <buffer> <leader>gb :Gbrowse<cr>
+" Navigate to current commit hash under the cursor inside the blame window
+autocmd FileType fugitiveblame nnoremap <buffer> <leader>gb :execute ":Gbrowse " . expand("<cword>")<cr>
 
 
 """""""""""""""""""""""""""""""
@@ -460,3 +482,6 @@ function! FileSearchAndReplace()
     execute ":%s/" . wordToReplace . "/" . replacement . "/gc"
     call inputrestore()
 endfunction
+
+let g:sqlfmt_command = "sqlfmt"
+let g:sqlfmt_options = ""
