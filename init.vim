@@ -13,13 +13,14 @@ Plug 'tpope/vim-surround' " Manage surroundings!
 Plug 'tpope/vim-repeat' " More powerful dot. E.g. repeats surround
 Plug 'tpope/vim-commentary' " Comment code
 Plug 'tpope/vim-fugitive' " Git wrapper
+Plug 'airblade/vim-gitgutter'
 Plug 'tpope/vim-rhubarb' " Gbrowse
 Plug 'tpope/vim-vinegar' " Simple file browser
 Plug 'airblade/vim-rooter' " Go to repo root
 Plug 'christoomey/vim-tmux-navigator' " Navigate to tmux panes
 Plug 'jiangmiao/auto-pairs' " The name says it all
 Plug 'vim-scripts/matchit.zip' " Extended % matcher
-Plug 'vim-scripts/DeleteTrailingWhitespace' " Delete trailing whitespace on save
+" Plug 'vim-scripts/DeleteTrailingWhitespace' " Delete trailing whitespace on save
 Plug 'AndrewRadev/splitjoin.vim' " Split and join code
 Plug 'janko-m/vim-test' " Test runner that works!
 Plug 'djoshea/vim-autoread' " Reload files that have changed automatically.
@@ -34,10 +35,13 @@ Plug 'ncm2/ncm2'
 Plug 'roxma/nvim-yarp'
 Plug 'ncm2/ncm2-bufword'
 Plug 'ncm2/ncm2-path'
+Plug 'fgrsnau/ncm-otherbuf'
 " Plug 'ncm2/ncm2-go'
 "
 " Linter
 Plug 'w0rp/ale' " Awesome linter. Note however that there are some overlaps with LanguageClient.
+
+" Plug 'wolfgangmehner/lua-support'
 
 " Navigation
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all'  }
@@ -133,6 +137,8 @@ try
 catch
 endtry
 
+nnoremap <leader>q :cope<cr>
+
 """""""""""""""""""""""""""""""
 " => Elixir
 """""""""""""""""""""""""""""""
@@ -146,7 +152,7 @@ autocmd FileType markdown setlocal textwidth=80
 """""""""""""""""""""""""""""""
 " => Rust
 """""""""""""""""""""""""""""""
-autocmd FileType rust setlocal expandtab sw=4 sts=4 ts=4
+autocmd FileType rust setlocal expandtab sw=2 sts=2 ts=2
 
 """""""""""""""""""""""""""""""
 " => HTML
@@ -243,6 +249,7 @@ let g:LanguageClient_serverCommands = {
     \ 'rust': ['~/.cargo/bin/rustup', 'run', 'nightly', 'rls'],
     \ 'ruby': ['tcp://localhost:7658'],
     \ 'go': ['bingo', '--format-style', 'goimports', '--diagnostics-style', 'instant', '--disable-func-snippet'],
+    \ 'lua': ['lua-lsp'],
     \ }
     " \ 'go' : ['go-langserver', '-gocodecompletion', '-format-tool', 'gofmt'],
 
@@ -309,14 +316,15 @@ let g:ale_pattern_options = {
 let g:ale_completion_delay = 1000
 au BufWinEnter *.rb :let b:ale_ruby_rubocop_executable  =  system('PATH=$(pwd)/bin:$PATH && which rubocop | tr -d "\n"')
 let g:ale_fixers = {
-\   '*': ['remove_trailing_lines', 'trim_whitespace'],
 \   'typescript': ['eslint', 'prettier', 'tslint'],
 \}
+" \   '*': ['remove_trailing_lines', 'trim_whitespace'],
 " Linter from go-langserver does not work
 " so we use Ale for linting instead.
-" let g:ale_linters = {
-" \   'go': ['gofmt', 'govet'],
-" \}
+let g:ale_linters = {
+\   'go': ['gofmt', 'govet'],
+\   'ruby': ['rubocop'],
+\}
 let g:ale_fix_on_save = 1
 let g:ale_completion_enabled = 1
 

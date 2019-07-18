@@ -5,6 +5,8 @@ export NODE_PATH="$NPM_PACKAGES/lib/node_modules:$NODE_PATH"
 export PATH=$NPM_PACKAGES/bin:$PATH
 export PATH=$PATH:$HOME/go/bin
 export PATH=$PATH:$HOME/.local/bin
+export PATH=$PATH:$HOME/bin
+export PATH=$PATH:$HOME/Downloads/luarocks-3.0.4/lua_modules/bin
 
 # Shopify
 [ -f /opt/dev/dev.sh ] && source /opt/dev/dev.sh
@@ -123,3 +125,14 @@ zstyle ':prezto:module:git:info:dirty' format "%%B%F{$secondary_color}]%f%%b %F{
 # cloudplatform: add Shopify clusters to your local kubernetes config
 export KUBECONFIG=${KUBECONFIG:+$KUBECONFIG:}/Users/felixdescoteaux/.kube/config:/Users/felixdescoteaux/.kube/config.shopify.cloudplatform
 for file in /Users/felixdescoteaux/src/github.com/Shopify/cloudplatform/workflow-utils/*.bash; do source ${file}; done
+
+kubectl-short-aliases
+
+klogs() {
+  kgpn | fzf | head -1 | xargs kubectl logs
+}
+
+
+kbash() {
+    k exec -it $(kgpn | fzf --prompt "/bin/bash > ") -- /bin/bash
+}
