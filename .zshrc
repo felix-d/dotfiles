@@ -35,11 +35,11 @@ source ~/.secrets
 # Terminal color
 # export TERM=xterm-256color-italic
 
+source "${ZDOTDIR:-$HOME}/.zprezto/init.zsh"
+
 # Fzf
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 export FZF_DEFAULT_COMMAND='rg --files --files-with-matches --no-ignore --hidden --follow --glob "!.git/*"'
-
-source "${ZDOTDIR:-$HOME}/.zprezto/init.zsh"
 
 # Aliases
 alias vim="nvim"
@@ -136,3 +136,8 @@ klogs() {
 kbash() {
     k exec -it $(kgpn | fzf --prompt "/bin/bash > ") -- /bin/bash
 }
+
+magellan-proxy () {
+        kubectl port-forward $(kubectl --context core-us-east1-1 -n magellan-production get pods | tail -n 1 | cut -f 1 -d ' ') --context core-us-east1-1 -n magellan-production 8438:8438
+}
+export PATH="/usr/local/opt/openssl@1.1/bin:$PATH"
