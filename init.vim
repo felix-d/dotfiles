@@ -222,6 +222,9 @@ cmap w!! w !sudo tee % >/dev/null
 " Adjust viewports to the same size
 map <Leader>= <C-w>=
 
+" Otherwise sets to <C-L> which conflicts with pane navigation.
+nmap <unique> <C-e> <Plug>NetrwRefresh
+
 " Change S to s for vim surround
 xmap s <Plug>VSurround
 
