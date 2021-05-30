@@ -7,13 +7,14 @@ export PATH=$PATH:$HOME/go/bin
 export PATH=$PATH:$HOME/.local/bin
 export PATH=$PATH:$HOME/bin
 export PATH=$PATH:$HOME/Downloads/luarocks-3.0.4/lua_modules/bin
+export GO111MODULE=on
 
 # Shopify
 [ -f /opt/dev/dev.sh ] && source /opt/dev/dev.sh
 
 # Chruby
 source /usr/local/share/chruby/chruby.sh
-chruby 2.5
+chruby 2.6.5
 
 # Lang
 export LANG=en_US.UTF-8
@@ -26,7 +27,7 @@ export LC_TIME=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
 
 # Go
-export GOPATH="$HOME/go"
+export GOPATH="$HOME"
 export PATH=$GOPATH/bin:$PATH
 
 # passwords and stuff
@@ -39,7 +40,7 @@ source "${ZDOTDIR:-$HOME}/.zprezto/init.zsh"
 
 # Fzf
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-export FZF_DEFAULT_COMMAND='rg --files --files-with-matches --no-ignore --hidden --follow --glob "!.git/*"'
+export FZF_DEFAULT_COMMAND='rg --files --files-with-matches --no-ignore --hidden --follow --glob "!.git/*" --glob "!.dev/*"'
 
 # Aliases
 alias vim="nvim"
@@ -114,7 +115,7 @@ export EDITOR=nvim
 export VISUAL=nvim
 chruby 2.6
 export PATH=$HOME/.cargo/bin:$PATH
-export JAVA_HOME=`/usr/libexec/java_home -v 1.8`
+# export JAVA_HOME=`/usr/libexec/java_home -v 1.8`
 
 # Fixes Ctr-A and Ctrl-E because of oh my zsh
 bindkey -e
@@ -123,8 +124,8 @@ export DEFAULT_USER=$USER
 zstyle ':prezto:module:git:info:dirty' format "%%B%F{$secondary_color}]%f%%b %F{yellow}✗%f"
 
 # cloudplatform: add Shopify clusters to your local kubernetes config
-export KUBECONFIG=${KUBECONFIG:+$KUBECONFIG:}/Users/felixdescoteaux/.kube/config:/Users/felixdescoteaux/.kube/config.shopify.cloudplatform
-for file in /Users/felixdescoteaux/src/github.com/Shopify/cloudplatform/workflow-utils/*.bash; do source ${file}; done
+export KUBECONFIG=${KUBECONFIG:+$KUBECONFIG:}/Users/felix/.kube/config:/Users/felix/.kube/config.shopify.cloudplatform
+for file in /Users/felix/src/github.com/Shopify/cloudplatform/workflow-utils/*.bash; do source ${file}; done
 
 kubectl-short-aliases
 

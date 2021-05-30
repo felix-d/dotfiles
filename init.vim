@@ -20,11 +20,15 @@ Plug 'airblade/vim-rooter' " Go to repo root
 Plug 'christoomey/vim-tmux-navigator' " Navigate to tmux panes
 Plug 'jiangmiao/auto-pairs' " The name says it all
 Plug 'vim-scripts/matchit.zip' " Extended % matcher
-" Plug 'vim-scripts/DeleteTrailingWhitespace' " Delete trailing whitespace on save
+Plug 'vim-scripts/DeleteTrailingWhitespace' " Delete trailing whitespace on save
 Plug 'AndrewRadev/splitjoin.vim' " Split and join code
 Plug 'janko-m/vim-test' " Test runner that works!
 Plug 'djoshea/vim-autoread' " Reload files that have changed automatically.
 Plug 'b4b4r07/vim-sqlfmt'
+Plug 'prettier/vim-prettier', {
+  \ 'do': 'yarn install',
+  \ 'branch': 'release/0.x'
+  \ }
 
 " Autocomplete
 Plug 'autozimu/LanguageClient-neovim', {
@@ -36,8 +40,7 @@ Plug 'roxma/nvim-yarp'
 Plug 'ncm2/ncm2-bufword'
 Plug 'ncm2/ncm2-path'
 Plug 'fgrsnau/ncm-otherbuf'
-" Plug 'ncm2/ncm2-go'
-"
+Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 " Linter
 Plug 'w0rp/ale' " Awesome linter. Note however that there are some overlaps with LanguageClient.
 
@@ -113,6 +116,8 @@ set novisualbell
 set tm=500
 set clipboard=unnamed
 set hidden
+" Regex syntax highlighting is super slow in typescript
+set re=0
 
 " Edit vim config (edit config)
 nnoremap <leader>ec :e $MYVIMRC<cr>
@@ -172,7 +177,7 @@ autocmd FileType css,scss,less setlocal expandtab sw=2 sts=2 ts=2
 """""""""""""""""""""""""""""""
 " => Typescript
 """""""""""""""""""""""""""""""
-autocmd FileType typescript setlocal expandtab sw=2 sts=2 ts=2
+autocmd FileType typescript,typescriptreact setlocal expandtab sw=2 sts=2 ts=2
 
 """""""""""""""""""""""""""""""
 " => MISC KEY BINDINGS
@@ -251,10 +256,11 @@ let g:LanguageClient_hasSnippetSupport = 0
 let g:LanguageClient_serverCommands = {
     \ 'rust': ['~/.cargo/bin/rustup', 'run', 'nightly', 'rls'],
     \ 'ruby': ['tcp://localhost:7658'],
-    \ 'go': ['bingo', '--format-style', 'goimports', '--diagnostics-style', 'instant', '--disable-func-snippet'],
     \ 'lua': ['lua-lsp'],
     \ }
+    " \ 'go': ['gopls'],
     " \ 'go' : ['go-langserver', '-gocodecompletion', '-format-tool', 'gofmt'],
+    " \ 'go': ['bingo', '--format-style', 'goimports', '--diagnostics-style', 'instant', '--disable-func-snippet'],
 
 " enable ncm2 for all buffers
 autocmd BufEnter * call ncm2#enable_for_buffer()
@@ -303,8 +309,8 @@ let test#strategy = "vtr"
 """""""""""""""""""""""""""""""
 " => Go
 """""""""""""""""""""""""""""""
-autocmd BufWritePre *.go call LanguageClient#textDocument_formatting()
 autocmd FileType go setlocal noet ci pi sw=4 sts=0 ts=4
+let g:go_info_mode='guru'
 
 
 """""""""""""""""""""""""""""""
@@ -316,20 +322,22 @@ let g:ale_pattern_options = {
 \   '.*\.go$': {'ale_enabled': 0},
 \}
 
-let g:ale_completion_delay = 1000
+" let g:ale_completion_delay = 100
 au BufWinEnter *.rb :let b:ale_ruby_rubocop_executable  =  system('PATH=$(pwd)/bin:$PATH && which rubocop | tr -d "\n"')
 let g:ale_fixers = {
+\   'go': ['gofmt'],
+\   '*': ['remove_trailing_lines', 'trim_whitespace'],
 \   'typescript': ['eslint', 'prettier', 'tslint'],
+\   'typescriptreact': ['eslint', 'prettier', 'tslint'],
 \}
-" \   '*': ['remove_trailing_lines', 'trim_whitespace'],
-" Linter from go-langserver does not work
-" so we use Ale for linting instead.
+" gopls doesnt seem to work well with Neovim language client. So we use ALE
+" instead
 let g:ale_linters = {
-\   'go': ['gofmt', 'govet'],
-\   'ruby': ['rubocop'],
+\   'go': ['gopls'],
+\   'ruby': ['rubocop']
 \}
 let g:ale_fix_on_save = 1
-let g:ale_completion_enabled = 1
+" let g:ale_completion_enabled = 1
 
 
 """""""""""""""""""""""""""""""
@@ -338,6 +346,13 @@ let g:ale_completion_enabled = 1
 au FileType javascript hi link jsFuncArgs GruvboxPurple
 au FileType javascript syn match jsDecorator '@[a-zA-Z_][0-9a-zA-Z_$]*'
 au FileType javascript hi link jsDecorator Function
+au FileType javascript setlocal expandtab sw=2 ts=2 sts=2
+
+
+"""""""""""""""""""""""""""""""
+" => Coffeescript
+"""""""""""""""""""""""""""""""
+au FileType coffee setlocal expandtab sw=2 ts=2 sts=2
 
 
 """""""""""""""""""""""""""""""
