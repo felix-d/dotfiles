@@ -5,46 +5,68 @@
 """""""""""""""""""""""""""""""
 call plug#begin('~/.vim/plugged')
 
-" Utils
+" Language pack. Syntax highlighting, formatting etc.
+Plug 'sheerun/vim-polyglot'
 
-Plug 'dbakker/vim-projectroot'
-Plug 'sheerun/vim-polyglot' " Supports all languages!
-Plug 'tpope/vim-surround' " Manage surroundings!
-Plug 'tpope/vim-repeat' " More powerful dot. E.g. repeats surround
-Plug 'tpope/vim-commentary' " Comment code
-Plug 'tpope/vim-fugitive' " Git wrapper
+" Manage surroundings.
+Plug 'tpope/vim-surround'
+
+" Repeat more thing with the dot. For example surrounds.
+Plug 'tpope/vim-repeat'
+
+" Comment code automatically.
+Plug 'tpope/vim-commentary'
+
+" A Git wrapper.
+Plug 'tpope/vim-fugitive'
+
+" Shows a git diff in the gutter.
 Plug 'airblade/vim-gitgutter'
-Plug 'tpope/vim-rhubarb' " Gbrowse
-Plug 'tpope/vim-vinegar' " Simple file browser
-Plug 'airblade/vim-rooter' " Go to repo root
-Plug 'christoomey/vim-tmux-navigator' " Navigate to tmux panes
-Plug 'jiangmiao/auto-pairs' " The name says it all
-Plug 'vim-scripts/matchit.zip' " Extended % matcher
-Plug 'vim-scripts/DeleteTrailingWhitespace' " Delete trailing whitespace on save
-Plug 'AndrewRadev/splitjoin.vim' " Split and join code
-Plug 'janko-m/vim-test' " Test runner that works!
-Plug 'djoshea/vim-autoread' " Reload files that have changed automatically.
-Plug 'b4b4r07/vim-sqlfmt'
-Plug 'prettier/vim-prettier', {
-  \ 'do': 'yarn install',
-  \ 'branch': 'release/0.x'
-  \ }
 
-" Autocomplete
-Plug 'autozimu/LanguageClient-neovim', {
-  \ 'branch': 'next',
-  \ 'do': 'bash install.sh',
-  \ }
-Plug 'ncm2/ncm2'
-Plug 'roxma/nvim-yarp'
-Plug 'ncm2/ncm2-bufword'
-Plug 'ncm2/ncm2-path'
-Plug 'fgrsnau/ncm-otherbuf'
-Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
+" :Gbrowse.
+Plug 'tpope/vim-rhubarb'
+
+" Simple file browser.
+Plug 'tpope/vim-vinegar' " Simple file browser
+
+" Goes to the project root automatically.
+Plug 'airblade/vim-rooter'
+
+" Navigate tmux panes.
+Plug 'christoomey/vim-tmux-navigator'
+
+" Automatically open pairs e.g. quotes.
+Plug 'jiangmiao/auto-pairs'
+
+" Extends the % matcher to more stuff.
+Plug 'vim-scripts/matchit.zip'
+
+" Delete trailing whitespaces on save.
+Plug 'vim-scripts/DeleteTrailingWhitespace'
+
+" Split and join code!
+Plug 'AndrewRadev/splitjoin.vim'
+
+" Test runner.
+Plug 'janko-m/vim-test'
+
+" Reload files that have changed automatically.
+Plug 'djoshea/vim-autoread'
+
+" Format SQL on save. Or use :SQLFmt.
+Plug 'b4b4r07/vim-sqlfmt'
+
+" LSP configurations.
+Plug 'neovim/nvim-lspconfig'
+
+" Autocompletion.
+Plug 'nvim-lua/completion-nvim'
+
+" Autocompletion from buffers.
+Plug 'steelsojka/completion-buffers'
+
 " Linter
 Plug 'w0rp/ale' " Awesome linter. Note however that there are some overlaps with LanguageClient.
-
-" Plug 'wolfgangmehner/lua-support'
 
 " Navigation
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all'  }
@@ -57,16 +79,14 @@ Plug 'edkolev/tmuxline.vim'
 Plug 'chriskempson/base16-vim'
 Plug 'itchyny/lightline.vim'
 
-" HTML
-Plug 'alvan/vim-closetag' " Closes tags in html
+" Close tags in HTML files.
+Plug 'alvan/vim-closetag'
 
-" Misc
-Plug 'christoomey/vim-tmux-runner' " Send commands to tmux pane
+" Send commands to Tmux panes.
+Plug 'christoomey/vim-tmux-runner'
 
-" Ruby
-Plug 'tpope/vim-endwise' " Adds end automatically
-
-" Go
+" Add `end` automatically in Ruby.
+Plug 'tpope/vim-endwise'
 
 call plug#end()
 
@@ -236,42 +256,32 @@ xmap s <Plug>VSurround
 " Add current file path to clipboard. (Copy Path)
 nmap <leader>cp :let @+ = expand("%")<cr>
 
-" Only create LSP mapping if there is a language server for this filetype.
-function! LC_maps()
-  if has_key(g:LanguageClient_serverCommands, &filetype)
-    vnoremap <buffer> <silent> <leader>lf :call LanguageClient#textDocument_rangeFormatting()<cr>
-    nnoremap <buffer> <silent> <leader>lf :call LanguageClient#textDocument_formatting()<cr>
-    nnoremap <buffer> <silent> <leader>ld :call LanguageClient#textDocument_hover()<cr>
-    nnoremap <buffer> <silent> <leader>lg :call LanguageClient#textDocument_definition()<CR>
-    nnoremap <buffer> <silent> <leader>lr :call LanguageClient#textDocument_rename()<CR>
-  endif
-endfunction
-autocmd FileType * call LC_maps()
-
-
 """""""""""""""""""""""""""""""
 " => AUTOCOMPLETION
 """""""""""""""""""""""""""""""
-let g:LanguageClient_hasSnippetSupport = 0
-let g:LanguageClient_serverCommands = {
-    \ 'rust': ['~/.cargo/bin/rustup', 'run', 'nightly', 'rls'],
-    \ 'ruby': ['tcp://localhost:7658'],
-    \ 'lua': ['lua-lsp'],
-    \ }
-    " \ 'go': ['gopls'],
-    " \ 'go' : ['go-langserver', '-gocodecompletion', '-format-tool', 'gofmt'],
-    " \ 'go': ['bingo', '--format-style', 'goimports', '--diagnostics-style', 'instant', '--disable-func-snippet'],
 
-" enable ncm2 for all buffers
-autocmd BufEnter * call ncm2#enable_for_buffer()
+" Use autocompletion in every buffer.
+autocmd BufEnter * lua require'completion'.on_attach()
 
-" :help Ncm2PopupOpen for more information
-set completeopt=noinsert,menuone,noselect
-set shortmess+=c
+let g:completion_chain_complete_list = {
+      \  'default': {
+      \    'default': [
+      \      {'complete_items': ['lsp', 'snippet', 'buffers']},
+      \      {'mode': '<c-p>'},
+      \      {'mode': '<c-n>'}
+      \    ]
+      \  }
+      \}
+
+" Set completeopt to have a better completion experience
+set completeopt=menuone,noinsert,noselect
 
 " TAB completion.
 inoremap <expr><TAB> pumvisible() ? "\<C-n>" : "\<TAB>"
 inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<TAB>"
+
+" Avoid showing message extra message when using completion
+set shortmess+=c
 
 " Close pum and new line if pressing Enter and pum is opened.
 inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
@@ -281,7 +291,6 @@ endfunction
 
 " Close pum when going insert mode.
 au CursorMovedI,InsertLeave * if pumvisible() == 0|silent! pclose|endif
-
 
 """""""""""""""""""""""""""""""
 " => AUTOCLOSE TAGS
