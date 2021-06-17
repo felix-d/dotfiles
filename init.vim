@@ -1,6 +1,9 @@
-" vim: set sw=2 ft=vim ts=2 sts=2 et:
+" vim: set sw=2 ft=vim ts=2 sts=2
 
-"""""""""""""""""""""""""""""""
+" Specifies the encoding used in the script
+scriptencoding utf-8 
+
+""""""""""""""""""""""""""""""
 " => BUNDLES
 """""""""""""""""""""""""""""""
 call plug#begin('~/.vim/plugged')
@@ -25,9 +28,6 @@ Plug 'airblade/vim-gitgutter'
 
 " :Gbrowse.
 Plug 'tpope/vim-rhubarb'
-
-" Simple file browser.
-Plug 'tpope/vim-vinegar' " Simple file browser
 
 " Goes to the project root automatically.
 Plug 'airblade/vim-rooter'
@@ -56,27 +56,20 @@ Plug 'djoshea/vim-autoread'
 " Format SQL on save. Or use :SQLFmt.
 Plug 'b4b4r07/vim-sqlfmt'
 
-" LSP configurations.
-Plug 'neovim/nvim-lspconfig'
+" Use release branch (recommend).
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
-" Autocompletion.
-Plug 'nvim-lua/completion-nvim'
-
-" Autocompletion from buffers.
-Plug 'steelsojka/completion-buffers'
-
-" Linter
-Plug 'w0rp/ale' " Awesome linter. Note however that there are some overlaps with LanguageClient.
-
-" Navigation
+" Navigation.
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all'  }
 Plug 'junegunn/fzf.vim'
 
-" UI
+" Onedark colorscheme.
 Plug 'joshdick/onedark.vim'
-Plug 'flazz/vim-colorschemes'
+
+" Generate Tmux line colorscheme from vim colorscheme.
 Plug 'edkolev/tmuxline.vim'
-Plug 'chriskempson/base16-vim'
+
+" Lightline for vim.
 Plug 'itchyny/lightline.vim'
 
 " Close tags in HTML files.
@@ -85,65 +78,64 @@ Plug 'alvan/vim-closetag'
 " Send commands to Tmux panes.
 Plug 'christoomey/vim-tmux-runner'
 
-" Add `end` automatically in Ruby.
-Plug 'tpope/vim-endwise'
+" jsonc support.
+Plug 'kevinoid/vim-jsonc'
+
+" Nerdtree
+Plug 'preservim/nerdtree'
 
 call plug#end()
 
 """""""""""""""""""""""""""""""
 " => GENERAL
 """""""""""""""""""""""""""""""
-let mapleader=' '                   " Just like spacemacs
-scriptencoding utf-8
-filetype plugin indent on
-set shellpipe=2>&1\|\ tee\          " I don't remember why this is here
-set tags=./tags,tags;$HOME          " Ctags location
+let mapleader=' '                   " Just like spacemacs.
+filetype on                         " Enable ft detection.
+set shellpipe=2>&1\|\ tee\          " I don't remember why this is here.
+set tags=./tags,tags;$HOME          " Ctags location.
 set nofoldenable                    " No folds.
-set mouse=                          " Automatically enable mouse usage
-set mousehide                       " Hide the mouse cursor while typing
-set virtualedit=onemore             " Allow for cursor beyond last character
-set iskeyword-=.                    " '.' is an end of word designator
-set iskeyword-=#                    " '#' is an end of word designator
-set iskeyword-=-                    " '-' is an end of word designator
-set scrolljump=10
-set linespace=0                     " No extra spaces between rows
-set re=1                            " Force old regex engine for faster ruby syntax highlighting.
-set number                          " Line numbers on
-set showmatch                       " Show matching brackets/parenthesis
-set nocursorline                    " No cursor line. It slows down terminal vim.
-set nocursorcolumn                  " No cursor column
-set norelativenumber                " No relative number
-set winminheight=0                  " Windows can be 0 line high
-set ignorecase                      " Case insensitive search
-set smartcase                       " Case sensitive when uc present
+set mouse=                          " Automatically enable mouse usage.
+set mousehide                       " Hide the mouse cursor while typing.
+set virtualedit=onemore             " Allow for cursor beyond last character.
+set iskeyword-=.                    " '.' is an end of word designator.
+set iskeyword-=#                    " '#' is an end of word designator.
+set iskeyword-=-                    " '-' is an end of word designator.
+set scrolljump=10                   " Jump by 10 when scrolling.
+set linespace=0                     " No extra spaces between rows.
+set number                          " Line numbers on.
+set showmatch                       " Show matching brackets/parenthesis.
+set nocursorline                    " No cursor line. It slows down terminal vim..
+set nocursorcolumn                  " No cursor column.
+set norelativenumber                " No relative number.
+set winminheight=0                  " Windows can be 0 line high.
+set ignorecase                      " Case insensitive search.
+set smartcase                       " Case sensitive when uc present.
 set nolist                          " We don't want to see $ at the end of each line.
 set nospell                         " No need for spell checking, its annoying.
 set wildmode=list:longest,full      " Command <Tab> completion, list matches, then longest common part, then all.
-set scrolloff=1                     " Minimum lines to keep above and below cursor
-set nowrap                          " Do not wrap long lines
-set shiftwidth=4                    " Use indents of 4 spaces
-set expandtab                       " Tabs are spaces, not tabs
-set tabstop=4                       " An indentation every four columns
-set softtabstop=4                   " Let backspace delete indent
-set nojoinspaces                    " Prevents inserting two spaces after punctuation on a join (J)
-set splitright                      " Puts new vsplit windows to the right of the current
-set splitbelow                      " Puts new split windows to the bottom of the current
-set nobackup                        " Why backups if git everywhere
-set nowb                            " No need to make a backup before overwriting
-set noswapfile                      " Swap files are annoying
-set noerrorbells
-set novisualbell
-set tm=500
-set clipboard=unnamed
-set hidden
-" Regex syntax highlighting is super slow in typescript
-set re=0
+set scrolloff=1                     " Minimum lines to keep above and below cursor.
+set nowrap                          " Do not wrap long lines.
+set shiftwidth=2                    " Use indents of 2 spaces.
+set expandtab                       " Tabs are spaces, not tabs.
+set tabstop=2                       " An indentation every 2 columns.
+set softtabstop=2                   " Let backspace delete indent.
+set nojoinspaces                    " Prevents inserting two spaces after punctuation on a join (J).
+set splitright                      " Puts new vsplit windows to the right of the current.
+set splitbelow                      " Puts new split windows to the bottom of the current.
+set nobackup                        " Why backups if git everywhere.
+set nowb                            " No need to make a backup before overwriting.
+set noswapfile                      " Swap files are annoying.
+set re=0                            " Regex syntax highlighting is super slow in typescript.
+set noerrorbells                    " Bells are annoying.
+set novisualbell                    " Ditto.
+set tm=500                          " Time in milliseconds to wait for a mapped sequence to complete.
+set clipboard=unnamed               " System clipboard.
+set hidden                          " When on a buffer becomes hidden when it is abandoned.
+set textwidth=120                   " Good default.
+set wildignore+=*/.git/*,*/.hg/*,*/.svn/*,*/.ds_store,*.o,*~,*.pyc " Ignore these when expanding wildcards.
 
-" Edit vim config (edit config)
-nnoremap <leader>ec :e $MYVIMRC<cr>
-
-" ignore compiled files
-set wildignore+=*/.git/*,*/.hg/*,*/.svn/*,*/.ds_store,*.o,*~,*.pyc
+" 0 goes to beginning of line.
+map 0 ^
 
 " Instead of reverting the cursor to the last position in the buffer, we
 " set it to the first line when editing a git commit message
@@ -152,69 +144,45 @@ au FileType gitcommit au! BufEnter COMMIT_EDITMSG call setpos('.', [0, 1, 1, 0])
 " Return to last edit position when opening files (You want this!)
 au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
 
-" Do not set netrw as the alternate buffer (#b)! Used also by vim vinegar.
-let g:netrw_altfile = 1
+" Turn persistent undo on. We can undo even when we close a buffer/VIM.
+set undodir=~/.vim/temp_dirs/undodir
+set undofile
 
-" Turn persistent undo on means that you can undo even when you close a buffer/VIM
-try
-    set undodir=~/.vim/temp_dirs/undodir
-    set undofile
-catch
-endtry
+" Automatically delete the buffer if we delete a file.
+let NERDTreeAutoDeleteBuffer = 1
 
-nnoremap <leader>q :cope<cr>
+" Prettier
+let NERDTreeMinimalUI = 1
 
-"""""""""""""""""""""""""""""""
-" => Elixir
-"""""""""""""""""""""""""""""""
-autocmd FileType ex setlocal filetype=elixir
+" Exit Vim if NERDTree is the only window left.
+autocmd BufEnter * if tabpagenr('$') == 1 && winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() |
+    \ quit | endif
 
-"""""""""""""""""""""""""""""""
-" => Markdown
-"""""""""""""""""""""""""""""""
-autocmd FileType markdown setlocal textwidth=80
-
-"""""""""""""""""""""""""""""""
-" => Rust
-"""""""""""""""""""""""""""""""
-autocmd FileType rust setlocal expandtab sw=2 sts=2 ts=2
-
-"""""""""""""""""""""""""""""""
-" => HTML
-"""""""""""""""""""""""""""""""
-autocmd FileType html setlocal expandtab sw=2 sts=2 ts=2
-
-"""""""""""""""""""""""""""""""
-" => YAML
-"""""""""""""""""""""""""""""""
-autocmd FileType yml setlocal expandtab sw=2 sts=2 ts=2
-
-"""""""""""""""""""""""""""""""
-" => CSS
-"""""""""""""""""""""""""""""""
-autocmd FileType css,scss,less setlocal expandtab sw=2 sts=2 ts=2
-
-"""""""""""""""""""""""""""""""
-" => Typescript
-"""""""""""""""""""""""""""""""
-autocmd FileType typescript,typescriptreact setlocal expandtab sw=2 sts=2 ts=2
+" Close NERDTree when opening a file
+let g:NERDTreeQuitOnOpen = 1
 
 """""""""""""""""""""""""""""""
 " => MISC KEY BINDINGS
 """""""""""""""""""""""""""""""
-map 0 ^
-nnoremap <leader>R :call CWDSearchAndReplace()<CR>
-vnoremap <leader>R :call CWDSearchAndReplaceVisual()<CR>
+" Edit vim config (edit config)
+nnoremap <leader>ec :e $MYVIMRC<cr>
 
+" Open the quickfix window.
+nnoremap <leader>q :cope<cr>
+
+" Open NERDTree on the current file if there is a file. Otherwise use the default :NERDTree command.
+nnoremap <expr> - bufname('%') != '' ? ':NERDTreeFind<CR>' : ':NERDTree<CR>'
+
+" Simple search and replace for the current file.
 nnoremap <leader>r :call FileSearchAndReplace()<CR>
 
-nnoremap <leader>s :call SearchProject()<CR>
-vnoremap <leader>s :call SearchProjectVisual()<CR>
+" Search in the current working directory.
+nnoremap <leader>s :Rg <C-r>=expand("<cword>")<CR>
 
 " Because jk is overrated
 inoremap df <Esc>
 
-" Go to last buffer that exists. Just like spacemacs
+" Go to last buffer that exists. Just like Spacemacs.
 noremap <Space><Tab> :b#<CR>
 
 " Pastetoggle (sane indentation on pastes)
@@ -259,28 +227,11 @@ nmap <leader>cp :let @+ = expand("%")<cr>
 """""""""""""""""""""""""""""""
 " => AUTOCOMPLETION
 """""""""""""""""""""""""""""""
-
-" Use autocompletion in every buffer.
-autocmd BufEnter * lua require'completion'.on_attach()
-
-let g:completion_chain_complete_list = {
-      \  'default': {
-      \    'default': [
-      \      {'complete_items': ['lsp', 'snippet', 'buffers']},
-      \      {'mode': '<c-p>'},
-      \      {'mode': '<c-n>'}
-      \    ]
-      \  }
-      \}
-
-" Set completeopt to have a better completion experience
-set completeopt=menuone,noinsert,noselect
-
 " TAB completion.
-inoremap <expr><TAB> pumvisible() ? "\<C-n>" : "\<TAB>"
-inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<TAB>"
+inoremap <expr><TAB> pumvisible() ? "\<C-n>" : "\<Tab>"
+inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 
-" Avoid showing message extra message when using completion
+" Avoid showing extra messages when using completion.
 set shortmess+=c
 
 " Close pum and new line if pressing Enter and pum is opened.
@@ -289,94 +240,10 @@ function! s:my_cr_function()
   return (pumvisible() ? "\<C-y>" : "" ) . "\<CR>"
 endfunction
 
-" Close pum when going insert mode.
-au CursorMovedI,InsertLeave * if pumvisible() == 0|silent! pclose|endif
-
 """""""""""""""""""""""""""""""
 " => AUTOCLOSE TAGS
 """""""""""""""""""""""""""""""
 let g:closetag_filenames = "*.html,*.xhtml,*.phtml,*.vue,*.html.eex"
-
-
-"""""""""""""""""""""""""""""""
-" => PYTHON
-"""""""""""""""""""""""""""""""
-let python_highlight_all = 1
-au FileType python setlocal expandtab sw=4 ts=4 sts=4
-au FileType python syn keyword pythonDecorator True None False self cls
-let g:python3_host_prog = '/usr/local/bin/python3'
-let g:python_host_prog = '/usr/local/bin/python'
-
-
-"""""""""""""""""""""""""""""""
-" => RUBY
-"""""""""""""""""""""""""""""""
-au FileType ruby setlocal expandtab sw=2 ts=2 sts=2 textwidth=120
-let test#strategy = "vtr"
-
-
-"""""""""""""""""""""""""""""""
-" => Go
-"""""""""""""""""""""""""""""""
-autocmd FileType go setlocal noet ci pi sw=4 sts=0 ts=4
-let g:go_info_mode='guru'
-
-
-"""""""""""""""""""""""""""""""
-" => Ale
-"""""""""""""""""""""""""""""""
-" Disable for file types for which we use LanguageClient instead.
-let g:ale_pattern_options = {
-\   '.*\.rs$': {'ale_enabled': 0},
-\   '.*\.go$': {'ale_enabled': 0},
-\}
-
-" let g:ale_completion_delay = 100
-au BufWinEnter *.rb :let b:ale_ruby_rubocop_executable  =  system('PATH=$(pwd)/bin:$PATH && which rubocop | tr -d "\n"')
-let g:ale_fixers = {
-\   'go': ['gofmt'],
-\   '*': ['remove_trailing_lines', 'trim_whitespace'],
-\   'typescript': ['eslint', 'prettier', 'tslint'],
-\   'typescriptreact': ['eslint', 'prettier', 'tslint'],
-\}
-" gopls doesnt seem to work well with Neovim language client. So we use ALE
-" instead
-let g:ale_linters = {
-\   'go': ['gopls'],
-\   'ruby': ['rubocop']
-\}
-let g:ale_fix_on_save = 1
-" let g:ale_completion_enabled = 1
-
-
-"""""""""""""""""""""""""""""""
-" => Javascript
-"""""""""""""""""""""""""""""""
-au FileType javascript hi link jsFuncArgs GruvboxPurple
-au FileType javascript syn match jsDecorator '@[a-zA-Z_][0-9a-zA-Z_$]*'
-au FileType javascript hi link jsDecorator Function
-au FileType javascript setlocal expandtab sw=2 ts=2 sts=2
-
-
-"""""""""""""""""""""""""""""""
-" => Coffeescript
-"""""""""""""""""""""""""""""""
-au FileType coffee setlocal expandtab sw=2 ts=2 sts=2
-
-
-"""""""""""""""""""""""""""""""
-" => JSON
-"""""""""""""""""""""""""""""""
-nmap <leader>jt <Esc>:%!python -m json.tool<CR><Esc>:set filetype=json<CR>
-let g:vim_json_syntax_conceal = 0
-au FileType json setlocal expandtab sw=2 ts=2 sts=2
-
-
-"""""""""""""""""""""""""""""""
-" => Lua
-"""""""""""""""""""""""""""""""
-au FileType lua setlocal expandtab sw=2 ts=2 sts=2
-
 
 """""""""""""""""""""""""""""""
 " => FZF
@@ -391,8 +258,6 @@ command! -bang -nargs=* Rg
 nnoremap <leader>h :History<cr>
 nnoremap <leader>f :Files<cr>
 nnoremap <leader>b :Buffers<cr>
-nnoremap <leader>gf :call fzf#run({'source': 'git diff --name-only $(git rev-parse --abbrev-ref HEAD)..master', 'sink': 'e', 'down': '40%'})<CR>
-
 
 """""""""""""""""""""""""""""""
 " => FUGITIVE
@@ -407,18 +272,19 @@ nnoremap <silent> <leader>gr :Gread<CR>
 nnoremap <silent> <leader>gw :Gwrite<CR>
 nnoremap <silent> <leader>ge :Gedit<CR>
 nnoremap <silent> <leader>gi :Git add -p %<CR>
+
 " Auto clean fugitive buffers
 autocmd BufReadPost fugitive://* set bufhidden=delete
+
 " Navigate to the current git object
 autocmd FileType git nnoremap <buffer> <leader>gb :Gbrowse<cr>
+
 " Navigate to current commit hash under the cursor inside the blame window
 autocmd FileType fugitiveblame nnoremap <buffer> <leader>gb :execute ":Gbrowse " . expand("<cword>")<cr>
-
 
 """""""""""""""""""""""""""""""
 " => UI
 """""""""""""""""""""""""""""""
-let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 set termguicolors
 let g:onedark_termcolors=16
 let g:onedark_terminal_italics=1
@@ -431,92 +297,12 @@ let g:lightline = {
 """""""""""""""""""""""""""""""
 " => Functions
 """""""""""""""""""""""""""""""
-" Add text to the command line.
-" Don't ask me why it's like this, it's just is.
-function! CmdLine(str)
-    exe "menu Foo.Bar :" . a:str
-    emenu Foo.Bar
-    unmenu Foo
-endfunction
-
-" Returns the word under cursor.
-function! GetWordUnderCursor()
-    let isOnKeyword = matchstr(getline('.'), '\%'.col('.').'c.') =~# '\k'
-    if isOnKeyword
-        return expand("<cword>")
-    else
-        return ""
-    endif
-endfunction
-
-" Returns the visual selection
-function! VisualSelection()
-    try
-        let a_save = @a
-        silent normal! gv"ay
-        return @a
-    finally
-        let @a = a_save
-    endtry
-endfunction
-
-" Use Rg with word under cursor
-function! SearchProject()
-    call CmdLine("Rg " . GetWordUnderCursor())
-endfunction
-
-" Maps Rg result to quickfix list
-function! s:rg_to_qf(line)
-  let parts = split(a:line, ':')
-  echo parts
-  return {'filename': parts[0], 'lnum': parts[1], 'col': parts[2],
-        \ 'text': join(parts[3:], ':')}
-endfunction
-
-" Wrapper over rg_to_qf
-function! RgToQF(query)
-  call setqflist(map(systemlist('rg --column '.a:query), 's:rg_to_qf(v:val)'))
-endfunction
-
-function! Escape(toescape)
-    return escape(a:toescape, '\\/.*$^~[]<>{}')
-endfunction
-
-" Search the project for the visual selection
-function! SearchProjectVisual()
-    call CmdLine("Rg " . Escape(VisualSelection()))
-endfunction
-
-" Search and replace the visual selection in the project
-function! CWDSearchAndReplaceVisual()
-    call inputsave()
-    let visual_select = Escape(VisualSelection())
-    let replacement = input("Replace \"" . visual_select . "\" with: ")
-    if visual_select != ''
-        call RgToQF(visual_select)
-        exec "cdo s/" . visual_select . "/" . replacement ."/gc"
-    endif
-    call inputrestore()
-endfunction
-
-" Search and replace the word under cursor in the CWD
-function! CWDSearchAndReplace()
-    call inputsave()
-    let wordToReplace = input("Replace : ", GetWordUnderCursor())
-    let replacement = input("Replace \"" . wordToReplace . "\" with: ")
-    call RgToQF(wordToReplace)
-    exec "cdo s/" . wordToReplace . "/" . replacement ."/gc"
-    call inputrestore()
-endfunction
-
-" Search and replace the word under cursor in the current buffer
+" Search and replace the word under cursor in the current buffer.
+" Just a conveniency really.
 function! FileSearchAndReplace()
     call inputsave()
-    let wordToReplace = input("Replace: ", GetWordUnderCursor())
+    let wordToReplace = input("Replace: ", expand("<cword>"))
     let replacement = input("Replace \"" . wordToReplace . "\" with: ")
     execute ":%s/" . wordToReplace . "/" . replacement . "/gc"
     call inputrestore()
 endfunction
-
-let g:sqlfmt_command = "sqlfmt"
-let g:sqlfmt_options = ""

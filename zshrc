@@ -76,11 +76,13 @@ alias gcor=git_checkout_recent_branch
 
 alias lastb="git for-each-ref --sort=committerdate refs/heads/ --format='%(HEAD) %(color:yellow)%(refname:short)%(color:reset) - %(color:red)%(objectname:short)%(color:reset) - %(contents:subject) - %(authorname) (%(color:green)%(committerdate:relative)%(color:reset))'"
 git config --global alias.up 'pull --rebase --autostash'
+git config --global alias.st 'status'
 
 export EDITOR=nvim
 export VISUAL=nvim
 
 export DOTFILES=~/src/github.com/felix-d/dotfiles
+alias dotfiles="nvim $DOTFILES"
 
 # Fixes Ctr-A and Ctrl-E because of oh my zsh
 bindkey -e
