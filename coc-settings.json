@@ -1,0 +1,15 @@
+{
+    "languageserver": {
+        "solidity": {
+            "command": "/usr/local/bin/solcjs",
+            "args": [ "--lsp" ],
+            "trace.server": "verbose",
+            "rootPatterns": [".git/"],
+            "filetypes": ["solidity"]
+        }
+    },
+    "eslint": {
+        "autoFixOnSave": true,
+        "autoFix": true
+    }
+}

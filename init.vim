@@ -81,8 +81,8 @@ Plug 'christoomey/vim-tmux-runner'
 " jsonc support.
 Plug 'kevinoid/vim-jsonc'
 
-" Nerdtree
-Plug 'preservim/nerdtree'
+" Simple file browser
+Plug 'tpope/vim-vinegar' " Simple file browser
 
 call plug#end()
 
@@ -148,18 +148,8 @@ au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g
 set undodir=~/.vim/temp_dirs/undodir
 set undofile
 
-" Automatically delete the buffer if we delete a file.
-let NERDTreeAutoDeleteBuffer = 1
-
-" Prettier
-let NERDTreeMinimalUI = 1
-
-" Exit Vim if NERDTree is the only window left.
-autocmd BufEnter * if tabpagenr('$') == 1 && winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() |
-    \ quit | endif
-
-" Close NERDTree when opening a file
-let g:NERDTreeQuitOnOpen = 1
+" Do not set netrw as the alternate buffer (#b)! Used also by vim vinegar.
+let g:netrw_altfile = 1
 
 """""""""""""""""""""""""""""""
 " => MISC KEY BINDINGS
@@ -170,14 +160,14 @@ nnoremap <leader>ec :e $MYVIMRC<cr>
 " Open the quickfix window.
 nnoremap <leader>q :cope<cr>
 
-" Open NERDTree on the current file if there is a file. Otherwise use the default :NERDTree command.
-nnoremap <expr> - bufname('%') != '' ? ':NERDTreeFind<CR>' : ':NERDTree<CR>'
-
-" Simple search and replace for the current file.
-nnoremap <leader>r :call FileSearchAndReplace()<CR>
+" " Open NERDTree on the current file if there is a file. Otherwise use the default :NERDTree command.
+" nnoremap <expr> - bufname('%') != '' ? ':NERDTreeFind<CR>' : ':NERDTree<CR>'
 
 " Search in the current working directory.
-nnoremap <leader>s :Rg <C-r>=expand("<cword>")<CR>
+nnoremap <leader>s :Rg <C-R>=expand("<cword>")<CR>
+
+" Search for visual selection.
+vnoremap <leader>s y:Rg <C-R>=escape(@",'/\')<CR>
 
 " Because jk is overrated
 inoremap df <Esc>
@@ -216,17 +206,21 @@ cmap w!! w !sudo tee % >/dev/null
 map <Leader>= <C-w>=
 
 " Otherwise sets to <C-L> which conflicts with pane navigation.
-nmap <unique> <C-e> <Plug>NetrwRefresh
+nmap <C-e> <Plug>NetrwRefresh
 
 " Change S to s for vim surround
 xmap s <Plug>VSurround
 
 " Add current file path to clipboard. (Copy Path)
-nmap <leader>cp :let @+ = expand("%")<cr>
+" nmap <leader>cp :let @+ = expand("%")<cr>
+
 
 """""""""""""""""""""""""""""""
 " => AUTOCOMPLETION
 """""""""""""""""""""""""""""""
+" Prevents multiline jumps over a closing pair. This is too annoying.
+let g:AutoPairsMultilineClose = 0
+
 " TAB completion.
 inoremap <expr><TAB> pumvisible() ? "\<C-n>" : "\<Tab>"
 inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<S-Tab>"
@@ -234,11 +228,7 @@ inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 " Avoid showing extra messages when using completion.
 set shortmess+=c
 
-" Close pum and new line if pressing Enter and pum is opened.
-inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
-function! s:my_cr_function()
-  return (pumvisible() ? "\<C-y>" : "" ) . "\<CR>"
-endfunction
+inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
 
 """""""""""""""""""""""""""""""
 " => AUTOCLOSE TAGS
@@ -258,6 +248,30 @@ command! -bang -nargs=* Rg
 nnoremap <leader>h :History<cr>
 nnoremap <leader>f :Files<cr>
 nnoremap <leader>b :Buffers<cr>
+
+"""""""""""""""""""""""""""""""
+" => COC
+"""""""""""""""""""""""""""""""
+" GoTo code navigation.
+nmap <silent> <leader>jd <Plug>(coc-definition)
+nmap <silent> <leader>jt <Plug>(coc-type-definition)
+nmap <silent> <leader>jr <Plug>(coc-references)
+nmap <silent> <leader>n <Plug>(coc-rename)
+nmap <silent> <leader>c <Plug>(coc-codeaction-cursor)
+
+let g:coc_disable_transparent_cursor = 1
+
+" Use K to show documentation in preview window.
+nnoremap <silent> K :call <SID>show_documentation()<CR>
+function! s:show_documentation()
+  if (index(['vim','help'], &filetype) >= 0)
+    execute 'h '.expand('<cword>')
+  elseif (coc#rpc#ready())
+    call CocActionAsync('doHover')
+  else
+    execute '!' . &keywordprg . " " . expand('<cword>')
+  endif
+endfunction
 
 """""""""""""""""""""""""""""""
 " => FUGITIVE
@@ -286,6 +300,7 @@ autocmd FileType fugitiveblame nnoremap <buffer> <leader>gb :execute ":Gbrowse "
 " => UI
 """""""""""""""""""""""""""""""
 set termguicolors
+let $NVIM_TUI_ENABLE_TRUE_COLOR=1 " I don't think this is still necessary
 let g:onedark_termcolors=16
 let g:onedark_terminal_italics=1
 colorscheme onedark
@@ -293,16 +308,3 @@ highlight Comment cterm=italic
 let g:lightline = {
   \ 'colorscheme': 'onedark',
   \ }
-
-"""""""""""""""""""""""""""""""
-" => Functions
-"""""""""""""""""""""""""""""""
-" Search and replace the word under cursor in the current buffer.
-" Just a conveniency really.
-function! FileSearchAndReplace()
-    call inputsave()
-    let wordToReplace = input("Replace: ", expand("<cword>"))
-    let replacement = input("Replace \"" . wordToReplace . "\" with: ")
-    execute ":%s/" . wordToReplace . "/" . replacement . "/gc"
-    call inputrestore()
-endfunction

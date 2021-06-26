@@ -13,7 +13,8 @@ fi
 
 # Fzf
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-export FZF_DEFAULT_COMMAND='rg --files --files-with-matches --no-ignore --hidden --follow --glob "!.git/*" --glob "!.dev/*"'
+# export FZF_DEFAULT_COMMAND='rg --files --files-with-matches --no-ignore --hidden --follow --exclude .git'
+export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git'
 
 # Aliases
 alias vim="nvim"
@@ -89,3 +90,13 @@ bindkey -e
 
 export DEFAULT_USER=$USER
 zstyle ':prezto:module:git:info:dirty' format "%%B%F{$secondary_color}]%f%%b %F{yellow}✗%f"
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+alias zapper="cd ~/src/github.com/Zapper-fi/zapper-web"
+
+source ~/.secrets
+export PATH="/opt/homebrew/opt/postgresql@11/bin:$PATH"
+nvm use 16
