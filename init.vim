@@ -169,6 +169,12 @@ nnoremap <leader>s :Rg <C-R>=expand("<cword>")<CR>
 " Search for visual selection.
 vnoremap <leader>s y:Rg <C-R>=escape(@",'/\')<CR>
 
+" Replace in the current buffer
+nnoremap <leader>r :%s/<C-R>=expand("<cword>")<CR>
+
+" Replace the visual selection
+vnoremap <leader>r y:%s/<C-R>=escape(@",'/\')<CR>
+
 " Because jk is overrated
 inoremap df <Esc>
 
@@ -210,10 +216,6 @@ nmap <C-e> <Plug>NetrwRefresh
 
 " Change S to s for vim surround
 xmap s <Plug>VSurround
-
-" Add current file path to clipboard. (Copy Path)
-" nmap <leader>cp :let @+ = expand("%")<cr>
-
 
 """""""""""""""""""""""""""""""
 " => AUTOCOMPLETION
